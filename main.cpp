@@ -3,6 +3,9 @@
 #include <vector>
 #include <cmath>
 #include <chrono>
+#include <string>
+#include <cstdlib>
+#include <optional>
 
 using namespace std;
 
@@ -10,6 +13,8 @@ typedef vector<vector<int>> Field;
 typedef pair<int, int> ii;
 
 const int VISITED = -1e6;
+const int WALL = -1e3;
+const char WALL_CHAR = '#';
 
 // debug
 void printField(const Field& field){
@@ -18,7 +23,7 @@ void printField(const Field& field){
 	cout << "Field:\n";
 	for (int i = 0; i < n; i++){
 		for (int j = 0; j < m; j++)
-			cout << field[i][j];
+			cout << field[i][j] << " ";
 		cout << "\n";
 	}
 	cout << "\n";
@@ -74,6 +79,15 @@ void restoreBalls(Field& field, const vector<pair<ii, ii>>& balls){
 	}
 }
 
+bool checkBlankCells(const Field& field){
+	int m = field[0].size();
+	int n = field.size();
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			if (field[i][j] == 0)
+				return true;
+	return false;
+}
 
 bool checkSolution(const Field& field, const vector<pair<ii, ii>>& balls, int color){
 	int m = field[0].size();
@@ -129,6 +143,10 @@ bool solve(Field& field, int color, int x, int y, const vector<pair<ii, ii>>& ba
 	auto target = balls[color].second;
 	if (x == target.first && y == target.second){
 		if (color+1 == bn){
+			
+			if (checkBlankCells(field))
+				return false;
+			
 			cout << "Found path for last!\n";
 			return true;
 		}
@@ -204,6 +222,13 @@ int main(){
 	
 	Field f(n);
 	
+	//for (int i = 0; i < n; i++){
+	//	f[i].resize(m);
+	//	for (int j = 0; j < m; j++)
+	//		fin >> f[i][j];
+	//}
+	
+	
 	for (int i = 0; i < n; i++){
 		string s;
 		fin >> s;
@@ -211,8 +236,13 @@ int main(){
 		f[i].resize(m);
 		
 		for (int j = 0; j < m; j++)
-			f[i][j] = s[j] - (int)'0';
+			if (s[j] == WALL_CHAR)
+				f[i][j] = WALL;
+			else
+				f[i][j] = stoi(s.substr(j, 1), nullptr, 16); //s[j] - (int)'0';
 	}
+	
+	printField(f);
 	
 	vector<int> cnt(bn);
 	vector<pair<ii, ii>> balls(bn);
@@ -258,10 +288,10 @@ int main(){
 		fout << "Succeed!\n";
 		for (int i = 0; i < n; i++){
 			for (int j = 0; j < m; j++)
-				if (f[i][j] >= -9)
+				if (f[i][j] != WALL)
 					fout << abs(f[i][j]);
 				else
-					fout << (char)(f[i][j] + (int)'0');
+					fout << WALL_CHAR;
 			fout << "\n";
 		}
 	}
