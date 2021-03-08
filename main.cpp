@@ -258,7 +258,10 @@ int main(){
 		fout << "Succeed!\n";
 		for (int i = 0; i < n; i++){
 			for (int j = 0; j < m; j++)
-				fout << abs(f[i][j]);
+				if (f[i][j] >= -9)
+					fout << abs(f[i][j]);
+				else
+					fout << (char)(f[i][j] + (int)'0');
 			fout << "\n";
 		}
 	}
