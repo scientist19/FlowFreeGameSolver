@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
+#include <chrono>
 
 using namespace std;
 
@@ -106,12 +107,12 @@ bool checkSolution(const Field& field, const vector<pair<ii, ii>>& balls, int co
 	
 	for (int i = color+1; i < bn; i++)
 		if (!connected[i] && disconnected[i]){
-			cout << "cehckSolution false because of " << i << "\n";
+			//cout << "cehckSolution false because of " << i << "\n";
 			return false;	
 		}
 
 	
-	cout << "cehckSolution true\n";
+	//cout << "cehckSolution true\n";
 	return true;
 }
 
@@ -120,7 +121,7 @@ bool solve(Field& field, int color, int x, int y, const vector<pair<ii, ii>>& ba
 	int n = field.size();
 	int bn = balls.size();
 	
-	cout << "Solve " << color << " " << x << " " << y << "\n";
+	//cout << "Solve " << color << " " << x << " " << y << "\n";
 
 	if (x < 0 || x >= n || y < 0 || y >= m)
 		return false;
@@ -193,8 +194,9 @@ bool solve(Field& field, int color, int x, int y, const vector<pair<ii, ii>>& ba
 
 int main(){
 	
-	ofstream fout("output.txt");
+	chrono::steady_clock::time_point begin = chrono::steady_clock::now();
 	
+	ofstream fout("output.txt");
 	ifstream fin("input.txt");
 	
 	int n, m, bn;
@@ -233,18 +235,18 @@ int main(){
 			}
 		}
 		
-	for (int i = 0; i < n; i++){
-		for (int j = 0; j < m; j++)
-			cout << f[i][j];
-	cout << "\n";
-	}
+	//for (int i = 0; i < n; i++){
+	//	for (int j = 0; j < m; j++)
+	//		cout << f[i][j];
+	//cout << "\n";
 	
-	cout << "\n\n";
+	
+	//cout << "\n\n";
 	
 	for (int i = 0; i < bn; i++){
 		auto start = balls[i].first;
 		auto target = balls[i].second;
-		cout << "(" << start.first << ", " << start.second << ") -> (" << target.first << ", " << target.second << ")\n";
+		//cout << "(" << start.first << ", " << start.second << ") -> (" << target.first << ", " << target.second << ")\n";
 	}
 	
 		
@@ -265,5 +267,9 @@ int main(){
 	}
 	
 	fout.close();
+	
+	chrono::steady_clock::time_point end = chrono::steady_clock::now();
+	std::cout << "Elapsed time = " 
+			  << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0 << "[s]" << std::endl;
 }
 
